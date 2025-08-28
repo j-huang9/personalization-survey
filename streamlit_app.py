@@ -58,14 +58,6 @@ elif st.session_state.page == 2:
 # page 3: advertisements
 elif st.session_state.page == 3:
     st.title("Next Section: Personalized Ads")
-    st.markdown("""
-        This is where you can display AI-generated personalized advertisements
-        and collect ratings.
-    """)
-    
-    st.write("Participant info collected:")
-    st.json(st.session_state.participant_info)
-    
     if st.button("Generate Example Ad"):
         prompt = f"""Generate a one-sentence advertisement for a watch that is personalised to include the following details: {st.session_state.participant_info} List of products to advertise: t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks.
 Pick a random product for each advertisement you generate.
@@ -77,8 +69,6 @@ In the Json format, indicate as a key the features used in that specific adverti
             try:
                 response = client.chat.completions.create(
                     model="gpt-5-mini", 
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.8
                 )
                 ad_text = response.choices[0].message.content.strip()
                 st.markdown(f"**Example Ad:** {ad_text}")
