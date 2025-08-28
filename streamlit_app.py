@@ -4,6 +4,9 @@ import pandas as pd
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
+if "participant_info" not in st.session_state:
+    st.session_state.participant_info = {}
+
 # initialize page state
 if "page" not in st.session_state:
     st.session_state.page = 1
@@ -71,7 +74,7 @@ with st.spinner("Generating ad..."):
                     model="gpt-5-mini", 
                     messages=[{"role": "user", "content": prompt}],
                 )
-                ad_text = response.choices[0].message.content.strip()
+                ad_text = response.choices[0].message["content"]                
                 st.markdown(f"**Example Ad:** {ad_text}")
     except Exception as e:
                 st.error(f"OpenAI request failed: {e}")
