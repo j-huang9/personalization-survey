@@ -2,7 +2,8 @@ import streamlit as st
 from openai import OpenAI
 import pandas as pd
 
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+API_KEY = "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"
+client = OpenAI(api_key=API_KEY)
 
 # initialize page state
 if "page" not in st.session_state:
