@@ -70,11 +70,12 @@ elif st.session_state.page == 3:
 
     with st.spinner("Generating ad..."):
         try:
-                response = client.chat.completions.create(
-                    model="gpt-5-mini", 
-                    messages=[{"role": "user", "content": prompt}],
-                )
-                ad_text = response.choices[0].message["content"]                
-                st.markdown(f"**Example Ad:** {ad_text}")
+            response = client.chat.completions.create(
+                model="gpt-5-mini", 
+                messages=[{"role": "user", "content": prompt}],
+            )
+            ad_text = ad_text = response.choices[0].message.content
+            st.markdown(f"**Example Ad:** {ad_text}")
         except Exception as e:
-                st.error(f"OpenAI request failed: {e}")
+            st.error(f"OpenAI request failed: {e}")
+
