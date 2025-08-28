@@ -2,7 +2,7 @@ import streamlit as st
 import openai
 import pandas as pd
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # initialize page state
 if "page" not in st.session_state:
@@ -75,12 +75,12 @@ In the Json format, indicate as a key the features used in that specific adverti
 
         with st.spinner("Generating ad..."):
             try:
-                response = openai.ChatCompletion.create(
-                    model="gpt-5-mini",
+                response = client.chat.completions.create(
+                    model="gpt-5-mini", 
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.8
                 )
-                ad_text = response.choices[0].message["content"].strip()
+                ad_text = response.choices[0].message.content.strip()
                 st.markdown(f"**Example Ad:** {ad_text}")
             except Exception as e:
                 st.error(f"OpenAI request failed: {e}")
