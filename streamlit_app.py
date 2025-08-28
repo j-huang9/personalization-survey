@@ -1,8 +1,7 @@
 import streamlit as st
 import openai
 import pandas as pd
-API_KEY = "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"
-client = OpenAI(api_key=API_KEY)
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 # survey introduction
 st.set_page_config(
     page_title="Marketing Personalization Survey", 
