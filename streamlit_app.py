@@ -80,9 +80,10 @@ elif st.session_state.page == 3:
                 model="gpt-5-mini", 
                 messages=[{"role": "user", "content": prompt}],
             )
-            ad_text = ad_text = response.choices[0].message.content
+            ad_text = response.choices[0].message.content
             import json
             st.session_state.ads = json.loads(ad_text)
+            st.session_state.page = 4
         except Exception as e:
             st.error(f"OpenAI request failed: {e}")
 
