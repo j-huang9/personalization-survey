@@ -92,8 +92,15 @@ elif st.session_state.page == 4:
     st.title("Rate the Ads")
 
     if st.session_state.current_ad < len(st.session_state.ads):
-        ad_text = st.session_state.ads[st.session_state.current_ad]
-        
+        ad_obj = st.session_state.ads[st.session_state.current_ad]
+
+        # If GPT returned dicts with "ad" key
+        if isinstance(ad_obj, dict) and "ad" in ad_obj:
+            ad_text = ad_obj["ad"]
+        else:
+            # fallback if it's just a string
+            ad_text = str(ad_obj)
+
         st.subheader(f"Advertisement {st.session_state.current_ad + 1} of {len(st.session_state.ads)}")
         st.markdown(f"**{ad_text}**")
 
