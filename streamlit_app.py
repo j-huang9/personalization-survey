@@ -60,15 +60,8 @@ elif st.session_state.page == 2:
                 "Gender": gender,
                 "Purchase Intent": purchase_intent
             }
-            st.session_state.page = 3
-        else:
-            st.error("Please fill in all required fields.")
-
-# page 3: advertisements
-elif st.session_state.page == 3:
-    st.title("Next Section: Personalized Ads")
-    if not st.session_state.ads:
-        prompt = f"""
+        if not st.session_state.ads:
+            prompt = f"""
         Generate 15 one-sentence personalized advertisements for these products: t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks.
         Personalize each ad using these features from the survey: {st.session_state.participant_info}
         Use the following mapping for features:
@@ -79,8 +72,6 @@ elif st.session_state.page == 3:
         Output as a JSON dictionary where the key is a comma-separated string of the features used (e.g. "Name,Location") and the value is the advertisement string. Strictly output valid JSON, no extra text.
         Use lots of emoji (🔥 👀 ⚡️ ✨) and make the ads catchy.
         """
-
-        with st.spinner("Generating ad..."):
             try:
                 response = client.chat.completions.create(
                     model="gpt-5-mini", 
@@ -88,22 +79,19 @@ elif st.session_state.page == 3:
                 )
                 ad_text = response.choices[0].message.content
                 import json
-                try:
-                    ads_json = json.loads(ad_text)
-                    # Flatten to list of ad text
-                    ads_list = list(ads_json.values())
-                    st.session_state.ads = ads_list
-                    st.session_state.page = 4
-                except Exception as e:
-                    st.error(f"Error parsing ads: {e}")
-                    st.code(ad_text)
+                ads_json = json.loads(ad_text)
+                ads_list = list(ads_json.values()) if isinstance(ads_json, dict) else ads_json
+                st.session_state.ads = ads_list
             except Exception as e:
                 st.error(f"OpenAI request failed: {e}")
+                st.stop()
+        st.session_state.page = 3  # Go straight to ad rating
     else:
-        st.session_state.page = 4
+        st.error("Please fill in all required fields.")
+        
 
-# page 4: individual ads
-elif st.session_state.page == 4:
+# page 3: rating advertisements
+elif st.session_state.page == 3:
     st.title("Rate the Ads")
 
     if st.session_state.current_ad < len(st.session_state.ads):
