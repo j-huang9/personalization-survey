@@ -80,7 +80,7 @@ elif st.session_state.page == 3:
                 model="gpt-5-mini", 
                 messages=[{"role": "user", "content": prompt}],
             )
-            ad_text = response.choices[0].message.content
+            ad_text = response.choices[0].message["content"]
             import json
             st.session_state.ads = json.loads(ad_text)
             st.session_state.page = 4
@@ -151,7 +151,7 @@ elif st.session_state.page == 4:
                 "purchase_intention": purchase_intention
             })
             st.session_state.current_ad += 1
-            
+
     else:
         st.success("You’ve completed the survey! 🎉 Thank you for your participation.")
 
