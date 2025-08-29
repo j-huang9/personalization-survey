@@ -67,40 +67,48 @@ elif st.session_state.page == 2:
 # page 3: advertisements
 elif st.session_state.page == 3:
     st.title("Next Section: Personalized Ads")
-    
-    prompt = f"""Generate a one-sentence advertisement for a watch that is personalised to include the following details: {st.session_state.participant_info} List of products to advertise: t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks.
-    Pick a random product for each advertisement you generate.
-    You don't have to strictly use all the details as-is; make the advertisement catchy and attractive (use emojis commonly found in advertisements, including 🔥 👀 ⚡️ ✨). The age doesn't have to be included if not relevant, but use it for creating relevant context. Change the structure/phrasing of each advertisement so the personalized features are not obvious. The features should not be right at the beginning of every advertisement. The creepiness should get higher as more features are included, and the ads will be concerningly more personalized.
-    Output 15 different advertisements in a JSON format. 4 of those will only use one personalised feature - Name, Age, Location, gender. 6 will use two features - (Name, Age), (Age, Location), (Name, Location), (Name, gender), (Age, gender), (Location, gender). 4 will use three features - (Name, Age, Gender), (Age, Location, Gender), (Name, Location, Gender), (Name, Age, Location). The last one will use all 4 features - (Name, Age, Location, Gender).
-    In the Json format, indicate as a key the features used in that specific advertisement."""
+    if not st.session_state.ads:
+        prompt = f"""
+        Generate 15 one-sentence personalized advertisements for these products: t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks.
+        Personalize each ad using these features from the survey: {st.session_state.participant_info}
+        Use the following mapping for features:
+          - 4 ads: Only one feature (Name, Age, Location, or Gender)
+          - 6 ads: Two features (combinations like Name+Age)
+          - 4 ads: Three features
+          - 1 ad: All four features
+        Output as a JSON dictionary where the key is a comma-separated string of the features used (e.g. "Name,Location") and the value is the advertisement string. Strictly output valid JSON, no extra text.
+        Use lots of emoji (🔥 👀 ⚡️ ✨) and make the ads catchy.
+        """
 
-    with st.spinner("Generating ad..."):
-        try:
-            response = client.chat.completions.create(
-                model="gpt-5-mini", 
-                messages=[{"role": "user", "content": prompt}],
-            )
-            ad_text = response.choices[0].message.content
-            import json
-            st.session_state.ads = json.loads(ad_text)
-            st.session_state.page = 4
-        except Exception as e:
-            st.error(f"OpenAI request failed: {e}")
+        with st.spinner("Generating ad..."):
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-5-mini", 
+                    messages=[{"role": "user", "content": prompt}],
+                )
+                ad_text = response.choices[0].message.content
+                import json
+                try:
+                    ads_json = json.loads(ad_text)
+                    # Flatten to list of ad text
+                    ads_list = list(ads_json.values())
+                    st.session_state.ads = ads_list
+                    st.session_state.page = 4
+                except Exception as e:
+                    st.error(f"Error parsing ads: {e}")
+                    st.code(ad_text)
+            except Exception as e:
+                st.error(f"OpenAI request failed: {e}")
+    else:
+        st.session_state.page = 4
 
 # page 4: individual ads
 elif st.session_state.page == 4:
     st.title("Rate the Ads")
 
     if st.session_state.current_ad < len(st.session_state.ads):
-        ad_obj = st.session_state.ads[st.session_state.current_ad]
-
-        # If GPT returned dicts with "ad" key
-        if isinstance(ad_obj, dict) and "ad" in ad_obj:
-            ad_text = ad_obj["ad"]
-        else:
-            # fallback if it's just a string
-            ad_text = str(ad_obj)
-
+        ad_text = st.session_state.ads[st.session_state.current_ad]
+        
         st.subheader(f"Advertisement {st.session_state.current_ad + 1} of {len(st.session_state.ads)}")
         st.markdown(f"**{ad_text}**")
 
