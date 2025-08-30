@@ -1,7 +1,6 @@
 import streamlit as st
 from openai import OpenAI
-import pandas as pd
-import random 
+import pandas as pd 
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
@@ -17,7 +16,7 @@ if "current_ad" not in st.session_state:
 if "responses" not in st.session_state:
     st.session_state.responses = []
 
-# survey introduction
+# page 1: survey introduction
 if st.session_state.page == 1:
     st.set_page_config(
         page_title="Marketing Personalization Survey",
@@ -33,7 +32,7 @@ if st.session_state.page == 1:
         - All responses are confidential.
         - This survey should take approximately 5 minutes.
     """)
-    
+# start button leads to participant info page    
     if st.button("Let's get started"):
         st.session_state.page = 2
 
@@ -50,7 +49,7 @@ elif st.session_state.page == 2:
             "Optional: Are you currently looking to purchase anything online? If so, what?"
         )
         submit_button = st.form_submit_button("Next")
-    
+   # stores answers in participant_info 
     if submit_button:
         if name and location and age and gender:
             st.session_state.participant_info = {
@@ -61,8 +60,15 @@ elif st.session_state.page == 2:
                 "Purchase Intent": purchase_intent
             }
         if not st.session_state.ads:
+            purchase_intent = st.session_state.participant_info.get("Purchase Intent", "").strip()
+            # if item is mentioned in purchase intent question, it will be occasionally included in product advertisements
+            if purchase_intent:
+                product_list = f"t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks, and occasionally the product they are currently interested in purchasing: {purchase_intent}."
+            else:
+                product_list = "t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks."    
             prompt = f"""
-        Generate 15 one-sentence personalized advertisements for these products: t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks. Pick a random product for each advertisement you generate.
+        Generate 15 one-sentence personalized advertisements for these products: {product_list}
+        Pick a random product for each advertisement you generate.
 
         Personalize each ad using these features from the survey: {st.session_state.participant_info}
         You don't have to strictly use all the details as-is; make the advertisement catchy and attractive (use emojis commonly found in advertisements, including 🔥 👀 ⚡️ ✨). The age doesn't have to be included if not relevant, but use it for creating relevant context. Change the structure/phrasing of each advertisement so the personalized features are not obvious. The features should not be right at the beginning of every advertisement. The creepiness should get higher as more features are included, and the ads will be concerningly more personalized
@@ -84,15 +90,15 @@ elif st.session_state.page == 2:
             except Exception as e:
                 st.error(f"OpenAI request failed: {e}")
                 st.stop()
-        st.session_state.page = 3  # Go straight to ad rating
+        st.session_state.page = 3
     else:
         st.error("Please fill in all required fields.")
         
-
 # page 3: rating advertisements
 elif st.session_state.page == 3:
     st.title("Rate the Ads")
 
+# displays current ad
     if st.session_state.current_ad < len(st.session_state.ads):
         ad_text = st.session_state.ads[st.session_state.current_ad]
         
@@ -154,6 +160,7 @@ elif st.session_state.page == 3:
             })
             st.session_state.current_ad += 1
 
+            # resets sliders to 3 for each advertisement
             st.session_state[f"creepiness_{st.session_state.current_ad}"] = 1
             st.session_state[f"personal_relevance_{st.session_state.current_ad}"] = 1
             st.session_state[f"click_intention_{st.session_state.current_ad}"] = 1
