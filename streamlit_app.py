@@ -108,7 +108,7 @@ elif st.session_state.page == 3:
         4 = Quite creepy → “This ad feels uncomfortably personal or intrusive.”  
         5 = Extremely creepy → “This ad feels very unsettling, invasive, or stalker-like.”
         """)
-        creepiness = st.slider("", 1, 5, 3, key="creepiness_slider")
+        creepiness = st.slider("", 1, 5, 3, key=f"creepiness_slider_{st.session_state.current_ad}")
 
         # Perceived personal relevance
         st.markdown("""
@@ -119,7 +119,7 @@ elif st.session_state.page == 3:
         4 = Quite tailored → “This ad feels well-matched to me personally.”  
         5 = Extremely tailored → “This ad feels directly designed for me.”
         """)
-        personal_relevance = st.slider("", 1, 5, 3, key="personal_relevance_slider")
+        personal_relevance = st.slider("", 1, 5, 3, key=f"personal_relevance_slider_{st.session_state.current_ad}")
 
         # Click intention
         st.markdown("""
@@ -130,7 +130,7 @@ elif st.session_state.page == 3:
         4 = Likely → “I would probably click this.”  
         5 = Very likely → “I would definitely click this.”
         """)
-        click_intention = st.slider("", 1, 5, 3, key="click_intention_slider")
+        click_intention = st.slider("", 1, 5, 3, key=f"click_intention_slider_{st.session_state.current_ad}")
 
         # Purchase intention
         st.markdown("""
@@ -141,7 +141,7 @@ elif st.session_state.page == 3:
         4 = Likely → “I would probably buy this.”  
         5 = Very likely → “I would definitely buy this.”
         """)
-        purchase_intention = st.slider("", 1, 5, 3, key="purchase_intention_slider")
+        purchase_intention = st.slider("", 1, 5, 3, key=f"purchase_intention_slider_{st.session_state.current_ad}")
 
         # Next button
         if st.button("Next"):
@@ -153,6 +153,12 @@ elif st.session_state.page == 3:
                 "purchase_intention": purchase_intention
             })
             st.session_state.current_ad += 1
+
+            st.session_state[f"creepiness_{st.session_state.current_ad}"] = 1
+            st.session_state[f"personal_relevance_{st.session_state.current_ad}"] = 1
+            st.session_state[f"click_intention_{st.session_state.current_ad}"] = 1
+            st.session_state[f"purchase_intention_{st.session_state.current_ad}"] = 1
+            st.rerun()
 
     else:
         st.success("You’ve completed the survey! 🎉 Thank you for your participation.")
