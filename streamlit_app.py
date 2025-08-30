@@ -62,15 +62,14 @@ elif st.session_state.page == 2:
             }
         if not st.session_state.ads:
             prompt = f"""
-        Generate 15 one-sentence personalized advertisements for these products: t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks.
+        Generate 15 one-sentence personalized advertisements for these products: t-shirts, shoes, hats, skincare, watches, phones, jacket, backpack, headphones, drinks. Pick a random product for each advertisement you generate.
+
         Personalize each ad using these features from the survey: {st.session_state.participant_info}
-        Use the following mapping for features:
-          - 4 ads: Only one feature (Name, Age, Location, or Gender)
-          - 6 ads: Two features (combinations like Name+Age)
-          - 4 ads: Three features
-          - 1 ad: All four features
+        You don't have to strictly use all the details as-is; make the advertisement catchy and attractive (use emojis commonly found in advertisements, including 🔥 👀 ⚡️ ✨). The age doesn't have to be included if not relevant, but use it for creating relevant context. Change the structure/phrasing of each advertisement so the personalized features are not obvious. The features should not be right at the beginning of every advertisement. The creepiness should get higher as more features are included, and the ads will be concerningly more personalized
+
+        Output 15 different advertisements in a JSON format. 4 of those will only use one personalised feature - Name, Age, Location, gender. 6 will use two features - (Name, Age), (Age, Location), (Name, Location) (Name, gender), (Age, gender), (Location, gender). 4 will use three features - (Name, Age, Gender), (Age, Location, Gender), (Name, Location, Gender), (Name, Age, Location). The last one will use all 4 features - (Name, Age, Location, Gender).
+
         Output as a JSON dictionary where the key is a comma-separated string of the features used (e.g. "Name,Location") and the value is the advertisement string. Strictly output valid JSON, no extra text.
-        Use lots of emoji (🔥 👀 ⚡️ ✨) and make the ads catchy.
         """
             try:
                 response = client.chat.completions.create(
@@ -109,7 +108,7 @@ elif st.session_state.page == 3:
         4 = Quite creepy → “This ad feels uncomfortably personal or intrusive.”  
         5 = Extremely creepy → “This ad feels very unsettling, invasive, or stalker-like.”
         """)
-        creepiness = st.slider("", 1, 5, 3)
+        creepiness = st.slider("", 1, 5, 3, key="creepiness_slider")
 
         # Perceived personal relevance
         st.markdown("""
@@ -120,7 +119,7 @@ elif st.session_state.page == 3:
         4 = Quite tailored → “This ad feels well-matched to me personally.”  
         5 = Extremely tailored → “This ad feels directly designed for me.”
         """)
-        personal_relevance = st.slider("", 1, 5, 3)
+        personal_relevance = st.slider("", 1, 5, 3, key="personal_relevance_slider")
 
         # Click intention
         st.markdown("""
@@ -131,7 +130,7 @@ elif st.session_state.page == 3:
         4 = Likely → “I would probably click this.”  
         5 = Very likely → “I would definitely click this.”
         """)
-        click_intention = st.slider("", 1, 5, 3)
+        click_intention = st.slider("", 1, 5, 3, key="click_intention_slider")
 
         # Purchase intention
         st.markdown("""
@@ -142,7 +141,7 @@ elif st.session_state.page == 3:
         4 = Likely → “I would probably buy this.”  
         5 = Very likely → “I would definitely buy this.”
         """)
-        purchase_intention = st.slider("", 1, 5, 3)
+        purchase_intention = st.slider("", 1, 5, 3, key="purchase_intention_slider")
 
         # Next button
         if st.button("Next"):
