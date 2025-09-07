@@ -4,6 +4,9 @@ from pymongo import MongoClient
 import pandas as pd 
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = MongoClient(st.secrets["MONGODB_URI"])
+db = client["personalized_marketing_survey"]
+collection = db["responses"]
 
 # initialize page state
 if "page" not in st.session_state:
@@ -159,6 +162,17 @@ elif st.session_state.page == 3:
                 "click_intention": click_intention,
                 "purchase_intention": purchase_intention
             })
+
+            user_doc = {
+                "participant_info": st.session_state.participant_info,
+                "responses": st.session_state.responses
+            }
+
+            collection.update_one(
+                {"participant_info.Name": st.session_state.participant_info["Name"]},
+                {"$set": user_doc},
+                upsert=True
+            )
             st.session_state.current_ad += 1
 
             # resets sliders to 3 for each advertisement
