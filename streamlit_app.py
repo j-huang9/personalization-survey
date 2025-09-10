@@ -4,8 +4,8 @@ from pymongo import MongoClient
 import pandas as pd 
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-client = MongoClient(st.secrets["MONGODB_URI"])
-db = client["personalized_marketing_survey"]
+mongo_client = MongoClient(st.secrets["MONGODB_URI"])
+db = mongo_client["personalized_marketing_survey"]
 collection = db["responses"]
 
 # initialize page state
