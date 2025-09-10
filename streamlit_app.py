@@ -68,8 +68,12 @@ if st.session_state.page == 1:
     - Participation is voluntary, and you may stop at any time.  
     """)
 # start button leads to participant info page    
-    if st.button("Let's get started"):
-        st.session_state.page = 2
+with st.form("start_form"):
+    start = st.form_submit_button("Let's get started")
+    
+if start:
+    st.session_state.page = 2
+
 
 # page 2: participant info
 elif st.session_state.page == 2:
@@ -78,7 +82,7 @@ elif st.session_state.page == 2:
     with st.form("participant_info_form"):
         name = st.text_input("First Name")
         location = st.text_input("City of Residence")
-        age = st.number_input("Age", min_value=13, max_value=110)
+        age = st.number_input("Age", min_value=18, max_value=110)
         gender = st.selectbox("Gender", ["Male", "Female", "Other"])
         purchase_intent = st.text_input(
             "Optional: Are you currently looking to purchase anything online? If so, what?"
