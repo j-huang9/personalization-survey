@@ -138,39 +138,64 @@ elif st.session_state.page == 2:
         
 # page 3: rating advertisements
 elif st.session_state.page == 3:
-
     if st.session_state.current_ad < len(st.session_state.ads):
+        # Display the advertisement prominently
         ad_text = st.session_state.ads[st.session_state.current_ad]
+        st.markdown(f"<h2 style='text-align:center'>{ad_text}</h2>", unsafe_allow_html=True)
+        st.markdown("---")  # separator
 
-        # Display ad 
-        st.markdown(f"## {ad_text}", unsafe_allow_html=True)
-
-        # Four columns for all sliders
-        col1, col2, col3, col4 = st.columns(4)
+        # First row: Creepiness & Personal Relevance
+        col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown("**Creepiness**")
-            st.caption("1=Not creepy, 5=Extremely creepy")
+            st.markdown("""
+            **How creepy is this ad?**  
+            1 = Not creepy at all → “This ad feels normal and not creepy.”  
+            2 = Slightly creepy → “This ad feels mostly okay, with only mild creepiness.”  
+            3 = Somewhat creepy → “This ad feels a little off, but not too bad.”  
+            4 = Quite creepy → “This ad feels uncomfortably personal or intrusive.”  
+            5 = Extremely creepy → “This ad feels very unsettling, invasive, or stalker-like.”
+            """)
             creepiness = st.slider("", 1, 5, 3, key=f"creepiness_{st.session_state.current_ad}")
 
         with col2:
-            st.markdown("**Personal Relevance**")
-            st.caption("1=Not tailored, 5=Extremely tailored")
+            st.markdown("""
+            **How tailored is this ad to you?**  
+            1 = Not tailored at all → “This ad doesn’t feel related to me in any way.”  
+            2 = Slightly tailored → “This ad seems vaguely related to me.”  
+            3 = Somewhat tailored → “This ad has some clear connection to me.”  
+            4 = Quite tailored → “This ad feels well-matched to me personally.”  
+            5 = Extremely tailored → “This ad feels directly designed for me.”
+            """)
             personal_relevance = st.slider("", 1, 5, 3, key=f"personal_relevance_{st.session_state.current_ad}")
 
+        # Second row: Click Intention & Purchase Intention
+        col3, col4 = st.columns(2)
+
         with col3:
-            st.markdown("**Click Intention**")
-            st.caption("1=Very unlikely, 5=Very likely")
+            st.markdown("""
+            **How likely would you be to engage with this ad?**  
+            1 = Very unlikely → “I would definitely not engage with this.”  
+            2 = Unlikely → “I probably wouldn’t engage with this.”  
+            3 = Neutral / Maybe → “I might or might not engage with this.”  
+            4 = Likely → “I would probably engage this.”  
+            5 = Very likely → “I would definitely engage with this.”
+            """)
             click_intention = st.slider("", 1, 5, 3, key=f"click_intention_{st.session_state.current_ad}")
 
         with col4:
-            st.markdown("**Purchase Intention**")
-            st.caption("1=Very unlikely, 5=Very likely")
+            st.markdown("""
+            **How likely are you to purchase this item?**  
+            1 = Very unlikely → “I would definitely not buy this.”  
+            2 = Unlikely → “I probably wouldn’t buy this.”  
+            3 = Neutral → “I might or might not buy this.”  
+            4 = Likely → “I would probably buy this.”  
+            5 = Very likely → “I would definitely buy this.”
+            """)
             purchase_intention = st.slider("", 1, 5, 3, key=f"purchase_intention_{st.session_state.current_ad}")
 
         # Next button
         if st.button("Next"):
-            # Append local response
             st.session_state.responses.append({
                 "ad": ad_text,
                 "creepiness": creepiness,
@@ -179,24 +204,26 @@ elif st.session_state.page == 3:
                 "purchase_intention": purchase_intention
             })
 
-            # Prepare document for MongoDB
+            # Save to MongoDB (replace with your db/collection as needed)
             user_doc = {
                 "participant_info": st.session_state.participant_info,
                 "responses": st.session_state.responses
             }
+            collection.update_one(
+                {"participant_info.Name": st.session_state.participant_info["Name"]},
+                {"$set": user_doc},
+                upsert=True
+            )
 
-            # Save/update in MongoDB
-            try:
-                collection.update_one(
-                    {"participant_info.Name": st.session_state.participant_info["Name"]},
-                    {"$set": user_doc},
-                    upsert=True
-                )
-            except Exception as e:
-                st.error(f"Failed to save to database: {e}")
-
+            # Move to next ad
             st.session_state.current_ad += 1
-            st.rerun()
+
+            # Reset sliders to 3 for next ad
+            st.session_state[f"creepiness_{st.session_state.current_ad}"] = 3
+            st.session_state[f"personal_relevance_{st.session_state.current_ad}"] = 3
+            st.session_state[f"click_intention_{st.session_state.current_ad}"] = 3
+            st.session_state[f"purchase_intention_{st.session_state.current_ad}"] = 3
+            st.experimental_rerun()
 
     else:
         st.success("You’ve completed the survey! 🎉 Thank you for your participation.")
