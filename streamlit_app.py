@@ -68,12 +68,8 @@ if st.session_state.page == 1:
     - Participation is voluntary, and you may stop at any time.  
     """)
 # start button leads to participant info page    
-with st.form("start_form"):
-    start = st.form_submit_button("Let's get started")
-    
-if start:
-    st.session_state.page = 2
-
+    if st.button("Let's get started"):
+        st.session_state.page = 2
 
 # page 2: participant info
 elif st.session_state.page == 2:
