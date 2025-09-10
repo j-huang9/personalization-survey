@@ -185,7 +185,7 @@ elif st.session_state.page == 3:
 
         with col4:
             st.markdown("""
-            **How likely are you to purchase this item?**  
+            **Based on this advertisement, how likely are you to purchase this item?**  
             1 = Very unlikely → “I would definitely not buy this.”  
             2 = Unlikely → “I probably wouldn’t buy this.”  
             3 = Neutral → “I might or might not buy this.”  
@@ -204,26 +204,28 @@ elif st.session_state.page == 3:
                 "purchase_intention": purchase_intention
             })
 
-            # Save to MongoDB (replace with your db/collection as needed)
-            user_doc = {
-                "participant_info": st.session_state.participant_info,
-                "responses": st.session_state.responses
-            }
-            collection.update_one(
-                {"participant_info.Name": st.session_state.participant_info["Name"]},
-                {"$set": user_doc},
-                upsert=True
-            )
-
             # Move to next ad
             st.session_state.current_ad += 1
-
+            
             # Reset sliders to 3 for next ad
             st.session_state[f"creepiness_{st.session_state.current_ad}"] = 3
             st.session_state[f"personal_relevance_{st.session_state.current_ad}"] = 3
             st.session_state[f"click_intention_{st.session_state.current_ad}"] = 3
             st.session_state[f"purchase_intention_{st.session_state.current_ad}"] = 3
-            st.experimental_rerun()
+
+            user_doc = {
+                "participant_info": st.session_state.participant_info,
+                "responses": st.session_state.responses
+            }
+            try:
+                collection.update_one(
+                    {"participant_info.Name": st.session_state.participant_info["Name"]},
+                    {"$set": user_doc},
+                    upsert=True
+                )
+            except Exception as e:
+                # Log the error but do not block the survey
+                st.warning(f"MongoDB update failed: {e}")
 
     else:
         st.success("You’ve completed the survey! 🎉 Thank you for your participation.")
