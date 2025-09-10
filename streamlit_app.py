@@ -26,14 +26,14 @@ if st.session_state.page == 1:
     st.title("Marketing Personalization Survey")
     st.markdown("""
         ### About the Researcher  
-    Hi! My name is [Your Name], and I am conducting this research project as part of my academic work.  
+    Hi! My name is Jenna Huang, and I am conducting this project as part of my independent research work.  
 
     ### Purpose of the Study  
     The purpose of this study is to understand how people perceive different types of personalized advertisements.  
     Specifically, I am studying how varying levels of personalization affect how ads are perceived in terms of:  
     - **Relevance** (how well the ad matches you)  
     - **Creepiness** (how unsettling the ad feels)  
-    - **Likelihood of clicking**  
+    - **Likelihood of engaging**  
     - **Purchase intention**  
 
     ### What Participation Involves  
@@ -51,7 +51,8 @@ if st.session_state.page == 1:
 
     ### Benefits  
     - You will not receive direct compensation.  
-    - However, by participating, you are contributing to research that can influence the future of AI and digital advertising.  
+    - While there may not be direct personal benefits, your participation will help researchers better understand how personalized advertising is perceived, which could inform future marketing practices and improve user experience.
+  
 
     ### Confidentiality  
     - All responses are **kept confidential**.  
@@ -61,7 +62,7 @@ if st.session_state.page == 1:
 
     ### Important Notes  
     - You must be **18 years or older** to participate.  
-    - Participation is voluntary, and you may stop at any time.
+    - Participation is voluntary
     """)
 # start button leads to participant info page    
     if st.button("Let's get started"):
