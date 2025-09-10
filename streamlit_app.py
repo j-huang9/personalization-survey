@@ -1,10 +1,16 @@
 import streamlit as st
 from openai import OpenAI
 from pymongo import MongoClient
+from pymongo.server_api import ServerApi
 import pandas as pd 
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-mongo_client = MongoClient(st.secrets["MONGODB_URI"])
+mongo_client = MongoClient(
+    st.secrets["MONGODB_URI"],
+    server_api=ServerApi('1')
+)
+
+# select your database and collection
 db = mongo_client["personalized_marketing_survey"]
 collection = db["responses"]
 
@@ -112,6 +118,7 @@ elif st.session_state.page == 2:
 
         Output as a JSON dictionary where the key is a comma-separated string of the features used (e.g. "Name,Location") and the value is the advertisement string. Strictly output valid JSON, no extra text.
         """
+        with st.spinner("Generating personalized ads… this may take up to a minute… "):
             try:
                 response = client.chat.completions.create(
                     model="gpt-5-mini", 
