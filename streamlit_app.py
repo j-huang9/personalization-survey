@@ -10,7 +10,7 @@ mongo_client = MongoClient(
     server_api=ServerApi('1')
 )
 
-# select your database and collection
+# select database and collection
 db = mongo_client["personalized_marketing_survey"]
 collection = db["responses"]
 
@@ -35,7 +35,8 @@ if st.session_state.page == 1:
     st.title("Marketing Personalization Survey")
     st.markdown("""
         ### About the Researcher  
-    Hi! My name is Jenna Huang, and I am conducting this project as part of my independent research work.  
+    Hi! My name is Jenna Huang, and I am conducting this project as part of my independent research work.
+    If you have any questions, feel free to contact me at jennaaahuang09@gmail.com.
 
     ### Purpose of the Study  
     The purpose of this study is to understand how people perceive different types of personalized advertisements.  
@@ -63,10 +64,9 @@ if st.session_state.page == 1:
 
 
     ### Confidentiality  
-    - All responses are **kept confidential**.  
-    - Data is stored securely in a password-protected database (MongoDB).  
-    - No identifying information will be shared outside the research team.  
-    - Any publications or reports will only include **anonymized data**.  
+    - All responses are **kept confidential**.   
+    - Data will only be accessible by the primary researcher, and will be deleted after.  
+    - Any publications or reports will only include **anonymized and aggregated data**.  
 
     ### Important Notes  
     - You must be **18 years or older** to participate.  
@@ -86,7 +86,7 @@ elif st.session_state.page == 2:
         age = st.number_input("Age", min_value=18, max_value=110)
         gender = st.selectbox("Gender", ["Male", "Female", "Other"])
         purchase_intent = st.text_input(
-            "Optional: Are you currently looking to purchase anything online? If so, what?"
+            "Optional: Are you currently looking to purchase anything online? If so, what? (Examples: camera, plant, furniture, etc.)"
         )
         submit_button = st.form_submit_button("Next")
    # stores answers in participant_info 
