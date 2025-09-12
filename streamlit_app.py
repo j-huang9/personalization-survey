@@ -44,4 +44,5 @@ st.markdown("""
     - You must be **18 years or older** to participate.  
     - Participation is voluntary.  
     """)
+st.success("➡️ Use the sidebar to go to **Participant Info** when ready!")
     
