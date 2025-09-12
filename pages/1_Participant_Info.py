@@ -1,6 +1,8 @@
 import streamlit as st
 from openai import OpenAI
 import json
+st.set_page_config(page_title="Participant Info", page_icon="👤")
+st.sidebar.header("Participant Info")
 
 if "participant_info" not in st.session_state:
     st.session_state.participant_info = {}

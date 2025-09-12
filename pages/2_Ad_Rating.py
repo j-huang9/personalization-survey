@@ -4,6 +4,9 @@ from pymongo.server_api import ServerApi
 from openai import OpenAI
 import json
 
+st.set_page_config(page_title="Ad Rating", page_icon="📢")
+st.sidebar.header("At Rating")
+
 if "participant_info" not in st.session_state or not st.session_state.participant_info:
     st.error("⚠️ Please complete the **Participant Info** page first.")
     st.stop()
