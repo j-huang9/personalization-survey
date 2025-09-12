@@ -3,13 +3,9 @@ import streamlit as st
 st.set_page_config(page_title="Marketing Personalization Survey", page_icon="📢")
 
 # page 1: survey introduction
-if st.session_state.page == 1:
-    st.set_page_config(
-        page_title="Marketing Personalization Survey",
-        page_icon="📢"
-    )
-    st.title("Marketing Personalization Survey")
-    st.markdown("""
+
+st.title("Marketing Personalization Survey")
+st.markdown("""
         ### About the Researcher  
     Hi! My name is Jenna Huang, and I am conducting this project as part of my independent research work.
     If you have any questions, feel free to contact me at jennaaahuang09@gmail.com.
