@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 from openai import OpenAI
 import json
+import random
 
 st.set_page_config(page_title="Ad Rating", page_icon="📢")
 st.sidebar.header("Ad Rating")
@@ -59,6 +60,9 @@ if not st.session_state.ads:
             ad_text = response.choices[0].message.content
             ads_json = json.loads(ad_text)
             st.session_state.ads = list(ads_json.values())
+
+            random.shuffle(st.session_state.ads)
+            
         except Exception as e:
             st.error(f"Ad generation failed: {e}")
             st.stop()
