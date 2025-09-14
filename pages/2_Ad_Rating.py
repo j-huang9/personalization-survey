@@ -103,7 +103,7 @@ for i, ad_text in enumerate(st.session_state.ads):
     col3, col4 = st.columns(2)
     with col3:
         st.markdown("""
-           **How likely would you be to engage with this ad? (Clicking, taking a photo, talking about it with others, etc)**   
+           **How likely would you be to engage with this ad? (Clicking, taking a photo, talking with others, etc)**   
                     
            1 = Very unlikely → “Would definitely not engage.”   
            2 = Unlikely → “Probably wouldn’t engage.”   
@@ -135,17 +135,16 @@ for i, ad_text in enumerate(st.session_state.ads):
     }
 
 # save all responses
-user_doc = {
-    "participant_info": st.session_state.participant_info,
-    "responses": list(st.session_state.responses.values())
-}
 try:
-    collection.update_one(
-        {"participant_info.Name": st.session_state.participant_info["Name"]},
-        {"$set": user_doc},
-        upsert=True
-    )
+        collection.update_one(
+            {"participant_info.Name": st.session_state.participant_info["Name"]},
+            {"$set": {
+                "participant_info": st.session_state.participant_info,
+                "responses": list(st.session_state.responses.values())
+            }},
+            upsert=True
+        )
 except Exception as e:
-    st.warning(f"MongoDB update failed: {e}")
+        st.warning(f"MongoDB update failed: {e}")
 
 st.success("You’ve completed the survey! 🎉 Thank you for your participation.")
