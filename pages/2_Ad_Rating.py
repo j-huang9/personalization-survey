@@ -79,22 +79,22 @@ for i, ad_text in enumerate(st.session_state.ads):
     with col1:
         st.markdown("""
            **How creepy is this ad?** 
-           1 = Not creepy at all → “This ad feels normal and not creepy.” 
-           2 = Slightly creepy → “This ad feels mostly okay, with only mild creepiness.” 
-           3 = Somewhat creepy → “This ad feels a little off, but not too bad.” 
-           4 = Quite creepy → “This ad feels uncomfortably personal or intrusive.” 
-           5 = Extremely creepy → “This ad feels very unsettling, invasive, or stalker-like.”
+           1 = Not creepy at all → “This ad feels normal and not creepy.”  
+           2 = Slightly creepy → “This ad feels mostly okay, with only mild creepiness.”  
+           3 = Somewhat creepy → “This ad feels a little off, but not too bad.”  
+           4 = Quite creepy → “This ad feels uncomfortably personal or intrusive.”  
+           5 = Extremely creepy → “This ad feels very unsettling, invasive, or stalker-like.”  
            """)
         creepiness = st.slider("", 1, 5, 3, key=f"creepiness_{i}")
 
     with col2:
         st.markdown("""
            **How tailored is this ad to you?** 
-           1 = Not tailored at all → “This ad doesn’t feel related to me in any way.” 
-           2 = Slightly tailored → “This ad seems vaguely related to me.” 
-           3 = Somewhat tailored → “This ad has some clear connection to me.” 
-           4 = Quite tailored → “This ad feels well-matched to me personally.” 
-           5 = Extremely tailored → “This ad feels directly designed for me.”
+           1 = Not tailored at all → “This ad doesn’t feel related to me in any way.”  
+           2 = Slightly tailored → “This ad seems vaguely related to me.”  
+           3 = Somewhat tailored → “This ad has some clear connection to me.”  
+           4 = Quite tailored → “This ad feels well-matched to me personally.”  
+           5 = Extremely tailored → “This ad feels directly designed for me.”  
            """)
         personal_relevance = st.slider("", 1, 5, 3, key=f"personal_relevance_{i}")
 
@@ -103,27 +103,27 @@ for i, ad_text in enumerate(st.session_state.ads):
     with col3:
         st.markdown("""
            **How likely would you be to engage with this ad? Engagement could include clicking, taking a photo, or talking about it with others.** 
-           1 = Very unlikely → “Would definitely not engage.” 
-           2 = Unlikely → “Probably wouldn’t engage.” 
-           3 = Neutral / Maybe → “Might or might not engage.” 
-           4 = Likely → “Would probably engage.” 
-           5 = Very likely → “Would definitely engage.”
+           1 = Very unlikely → “Would definitely not engage.”   
+           2 = Unlikely → “Probably wouldn’t engage.”   
+           3 = Neutral / Maybe → “Might or might not engage.”   
+           4 = Likely → “Would probably engage.”   
+           5 = Very likely → “Would definitely engage.”  
            """)
         click_intention = st.slider("", 1, 5, 3, key=f"click_intention_{i}")
 
     with col4:
         st.markdown("""
            **Based on this advertisement, how likely are you to purchase this item?** 
-           1 = Very unlikely → “I would definitely not buy this.” 
-           2 = Unlikely → “I probably wouldn’t buy this.” 
-           3 = Neutral → “I might or might not buy this.” 
-           4 = Likely → “I would probably buy this.” 
-           5 = Very likely → “I would definitely buy this.”
+           1 = Very unlikely → “I would definitely not buy this.”   
+           2 = Unlikely → “I probably wouldn’t buy this.”   
+           3 = Neutral → “I might or might not buy this.”   
+           4 = Likely → “I would probably buy this.”   
+           5 = Very likely → “I would definitely buy this.”  
            """)
         purchase_intention = st.slider("", 1, 5, 3, key=f"purchase_intention_{i}")
 
     # save to session state
-    st.session_state.responses[i] = {
+    st.session_state.responses[str(i)] = {
         "ad": ad_text,
         "creepiness": creepiness,
         "personal_relevance": personal_relevance,
