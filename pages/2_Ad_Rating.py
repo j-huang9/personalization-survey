@@ -63,83 +63,87 @@ if not st.session_state.ads:
             st.error(f"Ad generation failed: {e}")
             st.stop()
 
-if st.session_state.current_ad < len(st.session_state.ads):
-        # Display the advertisement 
-        ad_text = st.session_state.ads[st.session_state.current_ad]
-        st.markdown(f"<h2 style='text-align:center'>{ad_text}</h2>", unsafe_allow_html=True)
-        st.markdown("---")  # separator
-        st.markdown("Please rate this advertisement based on the following criteria:")
+if "responses" not in st.session_state:
+    st.session_state.responses = {}
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown("""
-            **How creepy is this ad?**  
-            1 = Not creepy at all → “This ad feels normal and not creepy.”  
-            2 = Slightly creepy → “This ad feels mostly okay, with only mild creepiness.”  
-            3 = Somewhat creepy → “This ad feels a little off, but not too bad.”  
-            4 = Quite creepy → “This ad feels uncomfortably personal or intrusive.”  
-            5 = Extremely creepy → “This ad feels very unsettling, invasive, or stalker-like.”
-            """)
-            creepiness = st.slider("", 1, 5, 3, key = "creepiness_slider")
+st.header("📢 Rate These Ads")
 
-        with col2:
-            st.markdown("""
-            **How tailored is this ad to you?**  
-            1 = Not tailored at all → “This ad doesn’t feel related to me in any way.”  
-            2 = Slightly tailored → “This ad seems vaguely related to me.”  
-            3 = Somewhat tailored → “This ad has some clear connection to me.”  
-            4 = Quite tailored → “This ad feels well-matched to me personally.”  
-            5 = Extremely tailored → “This ad feels directly designed for me.”
-            """)
-            personal_relevance = st.slider("", 1, 5, 3, key = "personal_relevance_slider")
+# Show all ads with 2x2 column slider layout
+for i, ad_text in enumerate(st.session_state.ads):
+    st.markdown(f"### Ad {i+1}")
+    st.markdown(f"<h4 style='text-align:center'>{ad_text}</h4>", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("Please rate this advertisement based on the following criteria:")
 
-        # Second row: Click Intention & Purchase Intention
-        col3, col4 = st.columns(2)
-        with col3:
-            st.markdown("""
-            **How likely would you be to engage with this ad? Engagement could include clicking, taking a photo, or talking about it with others.**  
-            1 = Very unlikely → “Would definitely not engage.”  
-            2 = Unlikely → “Probably wouldn’t engage.”  
-            3 = Neutral / Maybe → “Might or might not engage.”  
-            4 = Likely → “Would probably engage.”  
-            5 = Very likely → “Would definitely engage.”
-            """)
-            click_intention = st.slider("", 1, 5, 3,  key = "click_intention_slider")
+    # First row: creepiness + personal relevance
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("""
+           **How creepy is this ad?** 
+           1 = Not creepy at all → “This ad feels normal and not creepy.” 
+           2 = Slightly creepy → “This ad feels mostly okay, with only mild creepiness.” 
+           3 = Somewhat creepy → “This ad feels a little off, but not too bad.” 
+           4 = Quite creepy → “This ad feels uncomfortably personal or intrusive.” 
+           5 = Extremely creepy → “This ad feels very unsettling, invasive, or stalker-like.”
+           """)
+        creepiness = st.slider("", 1, 5, 3, key=f"creepiness_{i}")
 
-        with col4:
-            st.markdown("""
-            **Based on this advertisement, how likely are you to purchase this item?**  
-            1 = Very unlikely → “I would definitely not buy this.”  
-            2 = Unlikely → “I probably wouldn’t buy this.”  
-            3 = Neutral → “I might or might not buy this.”  
-            4 = Likely → “I would probably buy this.”  
-            5 = Very likely → “I would definitely buy this.”
-            """)
-            purchase_intention = st.slider("", 1, 5, 3, key = "purchase_intention_slider")
+    with col2:
+        st.markdown("""
+           **How tailored is this ad to you?** 
+           1 = Not tailored at all → “This ad doesn’t feel related to me in any way.” 
+           2 = Slightly tailored → “This ad seems vaguely related to me.” 
+           3 = Somewhat tailored → “This ad has some clear connection to me.” 
+           4 = Quite tailored → “This ad feels well-matched to me personally.” 
+           5 = Extremely tailored → “This ad feels directly designed for me.”
+           """)
+        personal_relevance = st.slider("", 1, 5, 3, key=f"personal_relevance_{i}")
 
-        if st.button("Next"):
-            st.session_state.responses.append({
-                "ad": ad_text,
-                "creepiness": creepiness,
-                "personal_relevance": personal_relevance,
-                "click_intention": click_intention,
-                "purchase_intention": purchase_intention
-            })
+    # Second row: click intention + purchase intention
+    col3, col4 = st.columns(2)
+    with col3:
+        st.markdown("""
+           **How likely would you be to engage with this ad? Engagement could include clicking, taking a photo, or talking about it with others.** 
+           1 = Very unlikely → “Would definitely not engage.” 
+           2 = Unlikely → “Probably wouldn’t engage.” 
+           3 = Neutral / Maybe → “Might or might not engage.” 
+           4 = Likely → “Would probably engage.” 
+           5 = Very likely → “Would definitely engage.”
+           """)
+        click_intention = st.slider("", 1, 5, 3, key=f"click_intention_{i}")
 
-            st.session_state.current_ad += 1
+    with col4:
+        st.markdown("""
+           **Based on this advertisement, how likely are you to purchase this item?** 
+           1 = Very unlikely → “I would definitely not buy this.” 
+           2 = Unlikely → “I probably wouldn’t buy this.” 
+           3 = Neutral → “I might or might not buy this.” 
+           4 = Likely → “I would probably buy this.” 
+           5 = Very likely → “I would definitely buy this.”
+           """)
+        purchase_intention = st.slider("", 1, 5, 3, key=f"purchase_intention_{i}")
 
-            user_doc = {
-                "participant_info": st.session_state.participant_info,
-                "responses": st.session_state.responses
-            }
-            try:
-                collection.update_one(
-                    {"participant_info.Name": st.session_state.participant_info["Name"]},
-                    {"$set": user_doc},
-                    upsert=True
-                )
-            except Exception as e:
-                st.warning(f"MongoDB update failed: {e}")
-    
-else:
-    st.success("You’ve completed the survey! 🎉 Thank you for your participation.")
+    # Save to session state
+    st.session_state.responses[i] = {
+        "ad": ad_text,
+        "creepiness": creepiness,
+        "personal_relevance": personal_relevance,
+        "click_intention": click_intention,
+        "purchase_intention": purchase_intention,
+    }
+
+# Save all responses to MongoDB on every rerun
+user_doc = {
+    "participant_info": st.session_state.participant_info,
+    "responses": list(st.session_state.responses.values())
+}
+try:
+    collection.update_one(
+        {"participant_info.Name": st.session_state.participant_info["Name"]},
+        {"$set": user_doc},
+        upsert=True
+    )
+except Exception as e:
+    st.warning(f"MongoDB update failed: {e}")
+
+st.success("✅ Your responses are being saved automatically as you go.")
