@@ -26,17 +26,17 @@ with st.form("participant_info_form"):
             "Optional: Are you currently looking to purchase anything online? If so, what? (Examples: camera, plant, furniture, etc.)"
         )
         submit_button = st.form_submit_button("Next", disabled=st.session_state.info_submitted)
-   # stores answers in participant_info 
-if submit_button and not st.session_state.info_submitted:
-    if name and location and age and gender:
-        st.session_state.participant_info = {
-            "Name": name,
-            "Location": location,
-            "Age": age,
-            "Gender": gender,
-            "Purchase Intent": purchase_intent
-        }
-        st.session_state.info_submitted = True
-        st.success("✅ Info saved! You can now go to **Ad Rating**.")
-    else:
-        st.error("⚠️ Please fill in all required fields.")
+    # stores answers in participant_info 
+        if submit_button and not st.session_state.info_submitted:
+            if name and location and age and gender:
+                st.session_state.participant_info = {
+                    "Name": name,
+                    "Location": location,
+                    "Age": age,
+                    "Gender": gender,
+                    "Purchase Intent": purchase_intent
+                }
+                st.session_state.info_submitted = True
+                st.success("✅ Info saved! You can now go to **Ad Rating**.")
+            else:
+                st.error("⚠️ Please fill in all required fields.")
