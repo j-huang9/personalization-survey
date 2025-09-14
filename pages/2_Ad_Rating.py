@@ -8,7 +8,7 @@ st.set_page_config(page_title="Ad Rating", page_icon="📢")
 st.sidebar.header("Ad Rating")
 
 if "participant_info" not in st.session_state or not st.session_state.participant_info:
-    st.error("⚠️ Please complete the **Participant Info** page first.")
+    st.error("⚠️ Please complete the **Participant Information** page first.")
     st.stop()
 
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -68,14 +68,13 @@ if "responses" not in st.session_state:
 
 st.header("📢 Rate These Ads")
 
-# Show all ads with 2x2 column slider layout
+# show ads
 for i, ad_text in enumerate(st.session_state.ads):
-    st.markdown(f"### Ad {i+1}")
     st.markdown(f"<h4 style='text-align:center'>{ad_text}</h4>", unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("Please rate this advertisement based on the following criteria:")
 
-    # First row: creepiness + personal relevance
+    # creepiness + personal relevance
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
@@ -99,7 +98,7 @@ for i, ad_text in enumerate(st.session_state.ads):
            """)
         personal_relevance = st.slider("", 1, 5, 3, key=f"personal_relevance_{i}")
 
-    # Second row: click intention + purchase intention
+    # click intention + purchase intention
     col3, col4 = st.columns(2)
     with col3:
         st.markdown("""
@@ -123,7 +122,7 @@ for i, ad_text in enumerate(st.session_state.ads):
            """)
         purchase_intention = st.slider("", 1, 5, 3, key=f"purchase_intention_{i}")
 
-    # Save to session state
+    # save to session state
     st.session_state.responses[i] = {
         "ad": ad_text,
         "creepiness": creepiness,
@@ -132,7 +131,7 @@ for i, ad_text in enumerate(st.session_state.ads):
         "purchase_intention": purchase_intention,
     }
 
-# Save all responses to MongoDB on every rerun
+# save all responses
 user_doc = {
     "participant_info": st.session_state.participant_info,
     "responses": list(st.session_state.responses.values())
@@ -146,4 +145,4 @@ try:
 except Exception as e:
     st.warning(f"MongoDB update failed: {e}")
 
-st.success("✅ Your responses are being saved automatically as you go.")
+st.success("You’ve completed the survey! 🎉 Thank you for your participation.")
