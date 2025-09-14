@@ -5,7 +5,7 @@ from openai import OpenAI
 import json
 
 st.set_page_config(page_title="Ad Rating", page_icon="📢")
-st.sidebar.header("At Rating")
+st.sidebar.header("Ad Rating")
 
 if "participant_info" not in st.session_state or not st.session_state.participant_info:
     st.error("⚠️ Please complete the **Participant Info** page first.")
@@ -79,7 +79,7 @@ if st.session_state.current_ad < len(st.session_state.ads):
             4 = Quite creepy → “This ad feels uncomfortably personal or intrusive.”  
             5 = Extremely creepy → “This ad feels very unsettling, invasive, or stalker-like.”
             """)
-            creepiness = st.slider("", 1, 5, 3)
+            creepiness = st.slider("", 1, 5, 3, key = "creepiness_slider")
 
         with col2:
             st.markdown("""
@@ -90,7 +90,7 @@ if st.session_state.current_ad < len(st.session_state.ads):
             4 = Quite tailored → “This ad feels well-matched to me personally.”  
             5 = Extremely tailored → “This ad feels directly designed for me.”
             """)
-            personal_relevance = st.slider("", 1, 5, 3)
+            personal_relevance = st.slider("", 1, 5, 3, key = "personal_relevance_slider")
 
         # Second row: Click Intention & Purchase Intention
         col3, col4 = st.columns(2)
@@ -103,7 +103,7 @@ if st.session_state.current_ad < len(st.session_state.ads):
             4 = Likely → “I would probably engage this.”  
             5 = Very likely → “I would definitely engage with this.”
             """)
-            click_intention = st.slider("", 1, 5, 3)
+            click_intention = st.slider("", 1, 5, 3,  key = "click_intention_slider")
 
         with col4:
             st.markdown("""
@@ -114,7 +114,7 @@ if st.session_state.current_ad < len(st.session_state.ads):
             4 = Likely → “I would probably buy this.”  
             5 = Very likely → “I would definitely buy this.”
             """)
-            purchase_intention = st.slider("", 1, 5, 3)
+            purchase_intention = st.slider("", 1, 5, 3, key = "purchase_intention_slider")
 
         if st.button("Next"):
             st.session_state.responses.append({
