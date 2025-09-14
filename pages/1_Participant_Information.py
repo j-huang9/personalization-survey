@@ -41,3 +41,5 @@ with st.form("participant_info_form"):
                 st.rerun()
             else:
                 st.error("⚠️ Please fill in all required fields.")
+
+st.sidebar.success("Once complete, go to **Ad Rating** in the sidebar to continue")
