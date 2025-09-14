@@ -68,6 +68,7 @@ if st.session_state.current_ad < len(st.session_state.ads):
         ad_text = st.session_state.ads[st.session_state.current_ad]
         st.markdown(f"<h2 style='text-align:center'>{ad_text}</h2>", unsafe_allow_html=True)
         st.markdown("---")  # separator
+        st.markdown("Please rate this advertisement based on the following criteria:")
 
         col1, col2 = st.columns(2)
         with col1:
@@ -96,12 +97,12 @@ if st.session_state.current_ad < len(st.session_state.ads):
         col3, col4 = st.columns(2)
         with col3:
             st.markdown("""
-            **How likely would you be to engage with this ad? Engagement could include clicking, sharing, saving, taking a photo, or talking about it with others.**  
-            1 = Very unlikely → “I would definitely not engage with this.”  
-            2 = Unlikely → “I probably wouldn’t engage with this.”  
-            3 = Neutral / Maybe → “I might or might not engage with this.”  
-            4 = Likely → “I would probably engage this.”  
-            5 = Very likely → “I would definitely engage with this.”
+            **How likely would you be to engage with this ad? Engagement could include clicking, taking a photo, or talking about it with others.**  
+            1 = Very unlikely → “Would definitely not engage.”  
+            2 = Unlikely → “Probably wouldn’t engage.”  
+            3 = Neutral / Maybe → “Might or might not engage.”  
+            4 = Likely → “Would probably engage.”  
+            5 = Very likely → “Would definitely engage.”
             """)
             click_intention = st.slider("", 1, 5, 3,  key = "click_intention_slider")
 
