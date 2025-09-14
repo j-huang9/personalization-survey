@@ -63,10 +63,9 @@ if not st.session_state.ads:
             st.error(f"Ad generation failed: {e}")
             st.stop()
 
-if "responses" not in st.session_state:
+if "responses" not in st.session_state or isinstance(st.session_state.responses, list):
     st.session_state.responses = {}
 
-st.header("📢 Rate These Ads")
 
 # show ads
 for i, ad_text in enumerate(st.session_state.ads):
@@ -78,7 +77,8 @@ for i, ad_text in enumerate(st.session_state.ads):
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
-           **How creepy is this ad?** 
+           **How creepy is this ad?**   
+                     
            1 = Not creepy at all → “This ad feels normal and not creepy.”  
            2 = Slightly creepy → “This ad feels mostly okay, with only mild creepiness.”  
            3 = Somewhat creepy → “This ad feels a little off, but not too bad.”  
@@ -89,7 +89,8 @@ for i, ad_text in enumerate(st.session_state.ads):
 
     with col2:
         st.markdown("""
-           **How tailored is this ad to you?** 
+           **How tailored is this ad to you?**   
+                    
            1 = Not tailored at all → “This ad doesn’t feel related to me in any way.”  
            2 = Slightly tailored → “This ad seems vaguely related to me.”  
            3 = Somewhat tailored → “This ad has some clear connection to me.”  
@@ -102,7 +103,8 @@ for i, ad_text in enumerate(st.session_state.ads):
     col3, col4 = st.columns(2)
     with col3:
         st.markdown("""
-           **How likely would you be to engage with this ad? Engagement could include clicking, taking a photo, or talking about it with others.** 
+           **How likely would you be to engage with this ad? (Clicking, taking a photo, talking about it with others, etc)**   
+                    
            1 = Very unlikely → “Would definitely not engage.”   
            2 = Unlikely → “Probably wouldn’t engage.”   
            3 = Neutral / Maybe → “Might or might not engage.”   
@@ -113,8 +115,9 @@ for i, ad_text in enumerate(st.session_state.ads):
 
     with col4:
         st.markdown("""
-           **Based on this advertisement, how likely are you to purchase this item?** 
-           1 = Very unlikely → “I would definitely not buy this.”   
+           **Based on this advertisement, how likely are you to purchase this item?**   
+           
+           1 = Very unlikely → “I would definitely not buy this.”    
            2 = Unlikely → “I probably wouldn’t buy this.”   
            3 = Neutral → “I might or might not buy this.”   
            4 = Likely → “I would probably buy this.”   
