@@ -76,6 +76,8 @@ if not st.session_state.ads:
 if "responses" not in st.session_state or isinstance(st.session_state.responses, list):
     st.session_state.responses = {}
 
+if st.session_state.ads and isinstance(st.session_state.ads[0], str):
+    st.session_state.ads = [{"features": [], "ad": ad} for ad in st.session_state.ads]
 
 # show ads
 for i, ad_obj in enumerate(st.session_state.ads):
