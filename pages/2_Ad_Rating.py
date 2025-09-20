@@ -59,7 +59,13 @@ if not st.session_state.ads:
             )
             ad_text = response.choices[0].message.content
             ads_json = json.loads(ad_text)
-            st.session_state.ads = list(ads_json.values())
+            st.session_state.ads = [
+                {
+                    "features": [f.strip() for f in key.split(",")],
+                    "ad": value
+                }
+                for key, value in ads_json.items()
+            ]
 
             random.shuffle(st.session_state.ads)
             
@@ -72,7 +78,10 @@ if "responses" not in st.session_state or isinstance(st.session_state.responses,
 
 
 # show ads
-for i, ad_text in enumerate(st.session_state.ads):
+for i, ad_obj in enumerate(st.session_state.ads):
+    ad_text = ad_obj["ad"]
+    features = ad_obj["features"]
+
     st.markdown(f"<h4 style='text-align:center'>{ad_text}</h4>", unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("Please rate this advertisement based on the following criteria:")
@@ -132,6 +141,7 @@ for i, ad_text in enumerate(st.session_state.ads):
     # save to session state
     st.session_state.responses[str(i)] = {
         "ad": ad_text,
+        "features": features,
         "creepiness": creepiness,
         "personal_relevance": personal_relevance,
         "click_intention": click_intention,
