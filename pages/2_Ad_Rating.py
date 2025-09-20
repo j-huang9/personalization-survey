@@ -22,7 +22,7 @@ mongo_client = MongoClient(
 db = mongo_client["personalized_marketing_survey"]
 collection = db["responses"]
 
-if not st.session_state.ads:
+if not st.session_state.ads or isinstance(st.session_state.ads[0], str):
     purchase_intent = st.session_state.participant_info.get("Purchase Intent", "").strip()
     # if item is mentioned in purchase intent question, it will be occasionally included in product advertisements
     if purchase_intent:
