@@ -37,8 +37,8 @@ with st.form("participant_info_form"):
                     "Purchase Intent": purchase_intent
                 }
                 st.session_state.info_submitted = True
-                st.success("✅ Info saved! You can now go to **Ad Rating**.")
-                st.rerun()
+                st.success("✅ Info saved! Redirecting you to Ad Rating...")
+                st.switch_page("2_Ad_Rating.py")
             else:
                 st.error("⚠️ Please fill in all required fields.")
 
